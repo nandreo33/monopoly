@@ -9,6 +9,7 @@ private:
   bool is_buildable;
   bool mortgaged;
   Player* owner; // this will be an error? include Player at compile time?
+  Color color; // how does this work
 public:
   void build();
   void do_action();
