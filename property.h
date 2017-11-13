@@ -11,7 +11,6 @@ private:
   Player* owner; // this will be an error? include Player at compile time?
   Color color; // how does this work
 public:
-  void build();
   void do_action();
   int get_rent();
   int get_num_buildings();
