@@ -21,13 +21,6 @@ public:
 }
 */
 
-void Property::build()
-{
-// check if is buildable
-// check if too many buildings?
-// increment buildings
-}
-
 int Property::get_rent()
 {
 // calculates and returns rent based on:
