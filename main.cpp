@@ -1,4 +1,5 @@
 #include <iostream>
+#include "space.h"
 
 // main game loop
 // checking edit on this file
