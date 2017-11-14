@@ -6,8 +6,8 @@ using namespace std;
 class Space 
 {
 private:
-  string name;
+	const string name;
 public:
-  virtual void do_action() { cout << "ERROR: called do_action() on space";};
-  string get_name() { return name;};
+	virtual void do_action() { cout << "ERROR: called do_action() on space";};
+	const string get_name() const { return name;};
 };
