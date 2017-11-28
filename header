@@ -1,0 +1,28 @@
+
+#ifndef monopoly_h
+#define monopoly_h
+#include <iostream>
+using namespace std;
+
+class player{
+private:
+
+    string name;
+    int balance;
+    int position;
+    int property_size;
+    bool in_jail;
+public:
+    player(string, int, int, int, bool);
+    string getName();
+    int getPosition();
+    int getProperty_size();
+    void add_money(int amount);
+    void subtract_money(int amount);
+    int get_balance();
+    void moves(int amount);
+    void move_to_position( int position );
+    void add_property(Property* property);
+    void remove_property( int index);
+
+};
