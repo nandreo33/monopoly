@@ -1,6 +1,6 @@
 
-#ifndef player_h
-#define player_h
+#ifndef monopoly_h
+#define monopoly_h
 #include <iostream>
 using namespace std;
 
