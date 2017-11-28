@@ -5,7 +5,7 @@ using namespace std;
 
 class Space 
 {
-private:
+protected:
 	const string name;
 public:
 	virtual void do_action() { cout << "ERROR: called do_action() on space";};
