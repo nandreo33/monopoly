@@ -1,6 +1,6 @@
 // adding player.cpp
 #include <iostream>
-#include "player.h"
+#include "monopoly.h"
 
 //retrieves the name of the player
 string player::getName(){
@@ -54,19 +54,17 @@ if(property_size<0)
 }
 int main(){
     string na;
-    int bal;
-     int pos;
      int prop;
-      bool jail;
-      int f;
-
-player person1(na, bal, pos, prop, jail);
-player person2(na, bal, pos, prop, jail);
-player person3(na, bal, pos, prop, jail);
-player person4(na, bal, pos, prop, jail);
-player person5(na, bal, pos, prop, jail);
-player person6(na, bal, pos, prop, jail);
-player person7(na, bal, pos, prop, jail);
-player person8(na, bal, pos, prop, jail);
+     
+//creates object for up to 8 players default balance 1500, default position starting point(0), not in jail
+  // na will be name input
+player person1(na, 1500, 0, prop, false);
+player person2(na, 1500, 0, prop, false);
+player person3(na, 1500, 0, prop, false);
+player person4(na, 1500, 0, prop, false);
+player person5(na, 1500, 0, prop, false);
+player person6(na, 1500, 0, prop, false);
+player person7(na, 1500, 0, prop, false);
+player person8(na, 1500, 0, prop, false);
 
 return 0;}
