@@ -23,6 +23,6 @@ public:
   void add_building();
   void set_owner(Player* player);
   Player* get_owner() const;
-  void do_action();
+  void do_action(Player* active_player);
   Property(int b_r, bool is_b, string name, ColorGroup col);
 };

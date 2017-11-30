@@ -74,13 +74,17 @@ void Property::add_building()
 {
   if (is_buildable())
   {
-    if (num_buildings == 5)
+    if (num_buildings >= 5)
     {
       throw ("add_building() error - property full");
     }
     else if (num_buildings < 0)
     {
       throw ("add_building() error - property has negative buildings");
+    }
+    else
+    {
+      num_buildings++;
     }
   }
 }
@@ -89,19 +93,13 @@ int Property::get_rent() const
 {
   if (get_color().get_color_type() == railroad)
   {
-    //####################
-    // implement this
-    //####################
+    return 50*get_owner().num_owned_railroads();
   }
   else if (get_color().get_color_type() == utility)
   {
     //####################
     // implement this
     //####################
-  }
-  else if (base_rent == 28)
-  {
-    return (Rents[96+num_buildings-1]);
   }
   else if (base_rent == 35)
   {
@@ -135,13 +133,8 @@ int* Property::get_owner() const
   }
 }
 
-void Property::do_action()
+void Property::do_action(Player* active_player)
 {
-
-  //####################
-  // checks for have enough money ! ! !
-  //####################
-
   if (get_owner())
   {
     cout << "\nYou landed on " << get_name();
@@ -149,39 +142,50 @@ void Property::do_action()
     cout << "\nYou owe them: $" << get_rent();
     cout << "\nPress enter to pay\n";
     cin.ignore();
-    //####################
-    // subtract money from active player somehow...
-    //####################
+    active_player.subtract_money(get_rent());
     get_owner().add_money(get_rent());
+
+    // ###################
+    // bankruptcy check ! ! !
+    // ###################
   }
   else
   {
     int response = 0;
     cout << "\nYou landed on " << get_name();
     cout << "\nIt costs " << get_color().get_purchase_cost();
-    cout << "\nWould you like to purchase it?\n1: Yes\n2: No\n";
-    while (true)
+
+    if (active_player.get_balance() < get_color().get_purchase_cost())
     {
-      cin << response;
-      if (response == 1)
+      cout << "\nWould you like to purchase it?\n1: Yes\n2: No\n";
+
+      while (true)
       {
-        //####################
-        // subtract money from active player somehow...
-        // set_owner to active player somehow....
-        // add_property to active player somehow....
-        //####################
-        break;
+        cin << response;
+        if (response == 1)
+        {
+          (*active_player).subtract_money(get_rent());
+          set_owner(active_player);
+          add_property(active_player);
+          break;
+        }
+        else if (response == 2)
+        {
+          break;
+        }
+        else
+        {
+          response = 0;
+          cout << "could not recognize response. try again.\n";
+          continue;
+        }
       }
-      else if (response == 2)
-      {
-        break;
-      }
-      else
-      {
-        response = 0;
-        cout << "could not recognize response. try again.\n";
-        continue;
-      }
+
+    }
+    else
+    {
+      cout << "\nYou don't have enough money to purchase it. Press enter to continue";
+      cin.ignore();
     }
   }
 }
