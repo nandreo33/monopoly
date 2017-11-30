@@ -1,24 +1,30 @@
 #include <iostream>
 #include "space.h"
 
-class jail{
+class GoToJailspace{
     public:
-    //this needs to be virtual to be overridden in derived class
+    int s=0; //times in jail
+   
     virtual void jailspace(){}
     //this is overloaded function of the previous one
-    void show(int x){std::cout<<"\nI am overloaded";} 
+    void show(){} 
 };
 
-class derived:public free{
-    do_action;
-};
+public GoToJailspace{
+    do_action(int s){
+        for (s=0, s<3, s++){
+            if 
+            
+    
+            }
+}
+    
+
+public FreeSpace{
+    do_action(){
+    }
+}
 
 
 int main(){
-    if (in_jail==true){
-      
-    
-    }
-    
-    
 }
