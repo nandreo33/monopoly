@@ -6,14 +6,15 @@ using namespace std;
 
 class player{
 private:
-
+    vector<Property*> owned_properties;
     string name;
     int balance;
     int position;
     int property_size;
-    bool in_jail;
+    int in_jail;
+
 public:
-    player(string, int, int, int, bool);
+    player(string, int, int, int);
     string getName();
     int getPosition();
     int getProperty_size();
@@ -23,6 +24,8 @@ public:
     void moves(int amount);
     void move_to_position( int position );
     void add_property(Property* property);
-    void remove_property( int index);
-
+    void remove_property( Property* property);
+    int num_owned_railroads();
+    int num_owned_utilities();
+    void print_properties();
 };
