@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include "player.h"
 #include "property.h"
 
 using namespace std;
@@ -23,14 +24,19 @@ const int Rents[] = {
                   200,600,1700,2000
                   };
 
-Property::Property(int b_r, bool is_b, string name, ColorGroup col) :
-    base_rent(base_rent), name(name), color(col)
+Property::Property(int p_c, int b_r, bool is_b, string s, ColorGroup col) :
+   purchase_cost(p_c), base_rent(b_r), name(s), color(col), Space(s)
 {
   num_buildings = 0;
   buildable = is_b;
   mortgaged = false;
   owner = 0;
 };
+
+int Property::get_purchase_cost() const
+{
+  return purchase_cost;
+}
 
 int Property::get_num_buildings() const
 {
@@ -50,7 +56,7 @@ bool Property::is_buildable() const
   return buildable;
 };
 
-string Property::get_name() const
+string Property::get_name()
 {
   return name;
 }
@@ -63,7 +69,7 @@ void Property::mortgage()
   }
   else
   {
-    throw ("error! already mortgaged");
+    throw ("mortage() error - already mortgaged");
   }
 }
 
@@ -89,17 +95,26 @@ void Property::add_building()
   }
 }
 
-int Property::get_rent() const
+int Property::get_rent(int die_one, int die_two) const
 {
   if (get_color().get_color_type() == railroad)
   {
-    return 50*get_owner().num_owned_railroads();
+    return 50*get_owner()->num_owned_railroads();
   }
   else if (get_color().get_color_type() == utility)
   {
-    //####################
-    // implement this
-    //####################
+    if (get_owner()->num_owned_utilities() == 1)
+    {
+      return (die_one + die_two)*4;
+    }
+    else if (get_owner()->num_owned_utilities() == 2)
+    {
+      return (die_one + die_two)*10;
+    }
+    else
+    {
+      throw ("get_rent() error - utility");
+    }
   }
   else if (base_rent == 35)
   {
@@ -111,7 +126,7 @@ int Property::get_rent() const
   }
   else
   {
-    return (Rents[((base_rent-2)%2) + num_buildings - 1]);
+    return (Rents[((base_rent-2)/2) + num_buildings - 1]);
   };
 }
 
@@ -120,11 +135,10 @@ void Property::set_owner(Player* player)
   owner = player;
 }
 
-int* Property::get_owner() const
+Player* Property::get_owner() const
 {
   if (owner == 0)
   {
-    cout << "unowned!";
     return 0;
   }
   else
@@ -133,40 +147,46 @@ int* Property::get_owner() const
   }
 }
 
-void Property::do_action(Player* active_player)
+void Property::space_action(Player* active_player, int die_one, int die_two)
 {
-  if (get_owner())
+  if (get_owner() && get_owner() != active_player)
   {
-    cout << "\nYou landed on " << get_name();
-    cout << "\n" << get_owner().get_name() << " owns this property";
-    cout << "\nYou owe them: $" << get_rent();
+    cout << "You landed on " << get_name();
+    cout << "\n" << get_owner()->get_name() << " owns this property";
+    cout << "\nYou owe them: $" << get_rent(die_one, die_two);
     cout << "\nPress enter to pay\n";
     cin.ignore();
-    active_player.subtract_money(get_rent());
-    get_owner().add_money(get_rent());
+    active_player->subtract_money(get_rent(die_one, die_two));
+    get_owner()->add_money(get_rent(die_one, die_two));
 
     // ###################
     // bankruptcy check ! ! !
     // ###################
   }
+  else if (get_owner())
+  {
+    cout << "You landed on " << get_name();
+    cout << "\nYou own this property";
+
+  }
   else
   {
     int response = 0;
-    cout << "\nYou landed on " << get_name();
-    cout << "\nIt costs " << get_color().get_purchase_cost();
+    cout << "You landed on " << get_name();
+    cout << "\nIt costs " << get_purchase_cost();
 
-    if (active_player.get_balance() < get_color().get_purchase_cost())
+    if (active_player->get_balance() > get_purchase_cost())
     {
       cout << "\nWould you like to purchase it?\n1: Yes\n2: No\n";
 
       while (true)
       {
-        cin << response;
+        cin >> response;
         if (response == 1)
         {
-          (*active_player).subtract_money(get_rent());
+          active_player->subtract_money(get_purchase_cost());
           set_owner(active_player);
-          add_property(active_player);
+          active_player->add_property(this);
           break;
         }
         else if (response == 2)
@@ -177,7 +197,8 @@ void Property::do_action(Player* active_player)
         {
           response = 0;
           cout << "could not recognize response. try again.\n";
-          continue;
+          cin.clear();
+          cin.ignore(256,'\n');
         }
       }
 
@@ -185,7 +206,7 @@ void Property::do_action(Player* active_player)
     else
     {
       cout << "\nYou don't have enough money to purchase it. Press enter to continue";
-      cin.ignore();
+      cin.ignore(256,'\n');
     }
   }
 }

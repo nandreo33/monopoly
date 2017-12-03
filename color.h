@@ -1,5 +1,7 @@
 #include <string>
 #include <iostream>
+#ifndef COLOR_H
+#define COLOR_H
 
 enum color_t 
 {	
@@ -18,18 +20,18 @@ enum color_t
 class ColorGroup
 {
 private:
-	const int purchase_cost;
 	const int building_cost;
 	const int num_properties;
 	const color_t color;
 public:
 	color_t get_color_type() const {	return color;};
 	int get_building_cost() const {	return building_cost;};
-	int get_purchase_cost() const {	return purchase_cost;};
-	ColorGroup(int p_c, int b_c, int n_p, color_t col) : 
-		purchase_cost(p_c),		//how much does it cost to buy a prop of this group?
+	ColorGroup(int b_c, int n_p, color_t col) : 
 		building_cost(b_c),	 	//how much does it cost to build on this group?
 		num_properties(n_p),	//how many properties in the group?
 		color(col)				//what color_t (enum) is the group?
 	{};
 };
+
+
+#endif
