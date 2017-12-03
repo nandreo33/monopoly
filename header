@@ -6,15 +6,22 @@ using namespace std;
 
 class player{
 private:
-
+    vector<Property*> owned_properties;
+    vector<Property*> trade_properties;
     string name;
     int balance;
     int position;
     int property_size;
-    bool in_jail;
+    int in_jail;
+
 public:
-    player(string, int, int, int, bool);
-    string getName();
+    //these will be used for trading property and capital.
+    void choose_property(Property*, unsigned int, player);
+    void trade_money(int, player, player);
+    //constructor for player
+    player(string, int, int, int);
+    //assortment of methods explained further in definitions
+    string get_name();
     int getPosition();
     int getProperty_size();
     void add_money(int amount);
@@ -23,6 +30,8 @@ public:
     void moves(int amount);
     void move_to_position( int position );
     void add_property(Property* property);
-    void remove_property( int index);
-
+    void remove_property( Property* property);
+    int num_owned_railroads();
+    int num_owned_utilities();
+    void print_properties();
 };
