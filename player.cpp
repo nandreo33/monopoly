@@ -11,6 +11,7 @@ Player::Player(string s) : name(s)
 	balance = 1500;
 	position = 0;
 	jail_counter = 0;
+	trade_balance = 0;
 }
 
 string Player::get_name() const
@@ -36,10 +37,6 @@ void Player::add_money(int amt)
 void Player::subtract_money(int amt)
 {
 	balance -= amt;
-
-	//################
-	// bankruptcy check?
-	//################
 }
 
 void Player::move(int amt, int board_size)
@@ -69,7 +66,6 @@ void Player::remove_property(int index)
 	string prop_name = owned_properties[index]->get_name();
 
 	owned_properties.erase(owned_properties.begin() + index);
-	//does this work?
 
 	vector<Property*>::const_iterator iter, end;
 
@@ -84,7 +80,6 @@ void Player::remove_property(int index)
 
 int Player::num_owned_railroads() const
 {
-	// maybe error check this?
 
 	int result;
 
@@ -103,8 +98,6 @@ int Player::num_owned_railroads() const
 
 int Player::num_owned_utilities() const
 {
-	// maybe error check this too?
-
 	int result;
 
 	vector<Property*>::const_iterator iter, end;
@@ -266,6 +259,8 @@ void Player::mortgage()
 	}
 }
 
+
+// fix this out if
 void Player::build()
 {
 	while(true){
@@ -313,3 +308,246 @@ void Player::build()
 		}
 	}
 }
+
+//choose property to be traded
+void Player::add_trade_property(Property* property)
+{
+	trade_properties.push_back(property);
+}
+
+//exchanges amount to be traded among players
+void Player::set_trade_balance(int bal)
+{
+	trade_balance = bal;
+}
+
+void Player::execute_trade(Player* other_player)
+{
+	for (int i = 0; i < trade_properties.size(); i++)
+	{
+		trade_properties[i]->set_owner(other_player);
+		other_player->add_property(trade_properties[i]);
+	}
+
+	for (int i = 0; i < other_player->trade_properties.size(); i++)
+	{
+		other_player->trade_properties[i]->set_owner(this);
+		add_property(other_player->trade_properties[i]);
+	}
+
+	other_player->add_money(trade_balance);
+	add_money(other_player->trade_balance);
+}
+
+void Player::reset_trade(Player* other_player)
+{
+	for (int i = 0; i < trade_properties.size(); i++)
+	{
+		add_property(trade_properties[i]);
+	}
+
+	for (int i = 0; i < other_player->trade_properties.size(); i++)
+	{
+		add_property(other_player->trade_properties[i]);
+	}
+
+	other_player->add_money(other_player->trade_balance);
+	add_money(trade_balance);
+
+	trade_properties.clear();
+	other_player->trade_properties.clear();
+	trade_balance = 0;
+	other_player->trade_balance = 0;
+}
+
+void Player::trade(vector<Player*> players)
+{
+	int response;
+	while(true){
+		cout << "\nEnter the number for the player you would like to trade with, or 0 to exit\n";
+		cout << "0: exit\n";
+		for (int i = 0; i < players.size(); i++)
+		{
+			if (players[i] != this)
+			{
+				cout << i+1 << ": " << players[i]->get_name() << "\n";
+			}
+		}
+
+		cin >> response;
+		cin.ignore(256,'\n');
+		if (response == 0)
+		{
+			break;
+		}
+		else if (response > 0 && response <= players.size())
+		{
+			int i = response-1;
+			if (players[i] != this)
+			{
+				Player* other_player = players[i];
+
+				// offer props
+				while(true){
+					cout << "\nEnter the number for your property to add it to the trade, or 0 to go to the next step\n";
+					cout << "0: next\n";
+					for (int i = 0; i < owned_properties.size(); i++)
+					{
+						cout << i+1 << ": " << owned_properties[i]->get_name() << "\n";
+					}
+
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 0)
+					{
+						break;
+					}
+					else if (response > 0 && response <= owned_properties.size())
+					{
+						int i = response-1;
+						add_trade_property(owned_properties[i]);
+						remove_property(i);
+					}
+					else
+					{
+						cin.clear();
+						cin.ignore(256,'\n');
+						cout << "could not recognize response. try again.";
+					}
+				}
+
+				// request props
+				while(true){
+					cout << "\nEnter the number for " << other_player->get_name() << "'s' property to add it to the trade, or 0 to go to the next step\n";
+					cout << "0: next\n";
+					for (int i = 0; i < other_player->owned_properties.size(); i++)
+					{
+						cout << i+1 << ": " << other_player->owned_properties[i]->get_name() << "\n";
+					}
+
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 0)
+					{
+						break;
+					}
+					else if (response > 0 && response <= other_player->owned_properties.size())
+					{
+						int i = response-1;
+						other_player->add_trade_property(other_player->owned_properties[i]);
+						other_player->remove_property(i);
+					}
+					else
+					{
+						cin.clear();
+						cin.ignore(256,'\n');
+						cout << "could not recognize response. try again.";
+					}
+				}
+
+				// offer money
+				while(true){
+					cout << "\nEnter the an amount (up to $" << get_balance() << ") of YOUR money to add to the trade\n";
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 0)
+					{
+						break;
+					}
+					else if (response > 0 && response <= get_balance())
+					{
+						set_trade_balance(response);
+						subtract_money(response);
+						break;
+					}
+					else
+					{
+						cin.clear();
+						cin.ignore(256,'\n');
+						cout << "could not recognize response. try again.";
+					}
+				}
+
+				// request money
+				while(true){
+					cout << "\nEnter the an amount (up to $" << other_player->get_balance() << ") of " << other_player->get_name() << "'s money to add to the trade\n";
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 0)
+					{
+						break;
+					}
+					else if (response > 0 && response <= other_player->get_balance())
+					{
+						other_player->set_trade_balance(response);
+						other_player->subtract_money(response);
+						break;
+					}
+					else
+					{
+						cin.clear();
+						cin.ignore(256,'\n');
+						cout << "could not recognize response. try again.";
+					}
+				}
+
+				cout << "\nYour offer:\n";
+
+				for (int i = 0; i < trade_properties.size(); i++)
+				{
+					cout << trade_properties[i]->get_name() << "\n";
+				}
+
+				cout << "$" << trade_balance << "\n\nFOR:\n";
+
+				for (int i = 0; i < other_player->trade_properties.size(); i++)
+				{
+					cout << other_player->trade_properties[i]->get_name() << "\n";
+				}
+
+				cout << "$" << other_player->trade_balance << "\n";
+
+				cout << other_player->get_name() << " do you accept?\n1: Yes\n2: No\n";
+
+
+				while(true){
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 1)
+					{
+						execute_trade(other_player);
+						break;
+					}
+					else if (response == 2)
+					{
+						reset_trade(other_player);
+						break;
+					}
+					else
+					{
+						cin.clear();
+						cin.ignore(256,'\n');
+						cout << "could not recognize response. try again.";
+					}
+				}
+
+
+			}
+			else
+			{
+				cout << "cannot trade with that player\n";
+			}
+		}
+		else
+		{
+			cin.clear();
+			cin.ignore(256,'\n');
+			cout << "could not recognize response. try again.";
+		}
+	}
+}
+
+// trade_properties.push_back(owned_properties[num-1]);
+// n1.remove_property(owned_properties[num-1]);
+// n2.add_property(trade_properties[0]);
+// trade_properties.pop_back();

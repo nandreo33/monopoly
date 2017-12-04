@@ -48,9 +48,6 @@ void Property::set_num_buildings(int i)
   num_buildings = i;
 }
 
-// ##############################
-// should this pass by reference?
-// ##############################
 ColorGroup Property::get_color() const
 {
   return color;
@@ -153,10 +150,6 @@ void Property::space_action(Player* active_player, int die_one, int die_two)
     cin.ignore();
     active_player->subtract_money(get_rent(die_one, die_two));
     get_owner()->add_money(get_rent(die_one, die_two));
-
-    // ###################
-    // bankruptcy check ! ! !
-    // ###################
   }
   else if (get_owner() && get_owner() != active_player && is_mortgaged())
   {

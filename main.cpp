@@ -97,12 +97,14 @@ int main()
     // filter input
     int num_players = 0;
     cout << "How many players?\n";
-    while (num_players < 1)
+    while (num_players < 1 || num_players > 8)
     {
 		cin >> num_players;
-		if (num_players < 1)
+		if (num_players < 1 || num_players > 8)
 		{
-			cout << "num_players must be > 0. try again\n";
+			cout << "num_players must be 1-8. try again\n";
+			cin.clear();
+			cin.ignore(256,'\n');
 		}
 	}
 
@@ -214,7 +216,7 @@ int main()
 			}
 			else if (response == 2)
 			{
-				
+				active_player->trade(players);
 			}
 			else if (response == 3)
 			{

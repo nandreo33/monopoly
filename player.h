@@ -15,7 +15,9 @@ private:
 	int balance;
 	int position;
 	int jail_counter;
-	vector<Property*> owned_properties;
+	vector<Property*> owned_properties;	
+    vector<Property*> trade_properties;
+    int trade_balance;
 	bool get_out_of_jail_free_card;
 public:
 	string get_name() const;
@@ -39,6 +41,11 @@ public:
 	void print_properties();
 	void mortgage();
 	void build();
+	void add_trade_property(Property* property);
+	void set_trade_balance(int bal);
+	void execute_trade(Player* other_player);
+	void reset_trade(Player* other_player);
+	void trade(vector<Player*> players);
 	Player(string s);
 };
 
