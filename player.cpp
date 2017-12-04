@@ -1,3 +1,11 @@
+// adding player.cpp
+/*
+defines different action methods for dealing with player
+*/
+
+#include <iostream>
+#include "monopoly.h"
+
 //retrieves the name of the player
 string player::get_name(){
 return name;
