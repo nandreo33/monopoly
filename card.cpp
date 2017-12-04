@@ -1,3 +1,7 @@
+/*
+card.cpp prints the Community and Chance cards
+*/
+
 #include <iostream>
 #include <fstream>
 #include <string>
