@@ -1,3 +1,8 @@
+/**
+monopoly definition header, creates owned and to trade Property vectors. 
+The players profile is also defined, with name, board position, property size and jail status.
+**/
+
 class player{
 private:
     vector<Property*> owned_properties;
