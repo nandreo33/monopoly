@@ -29,9 +29,12 @@ public:
 	int num_owned_railroads() const;
 	int num_owned_utilities() const;
 	int num_owned_buildings() const;
+	bool is_group_owned(color_t c);
 	void set_jail_counter(int i);
 	int get_jail_counter();
 	void print_properties();
+	void mortgage();
+	void build();
 	Player(string s);
 };
 

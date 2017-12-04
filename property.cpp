@@ -43,6 +43,11 @@ int Property::get_num_buildings() const
   return num_buildings;
 };
 
+void Property::set_num_buildings(int i)
+{
+  num_buildings = i;
+}
+
 // ##############################
 // should this pass by reference?
 // ##############################
@@ -66,7 +71,7 @@ string Property::get_name()
   return name;
 }
 
-void Property::mortgage()
+void Property::toggle_mortgage()
 {
   if (!mortgaged)
   {
@@ -74,7 +79,7 @@ void Property::mortgage()
   }
   else
   {
-    throw ("mortage() error - already mortgaged");
+    mortgaged = false;
   }
 }
 

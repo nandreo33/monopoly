@@ -63,7 +63,7 @@ void CardSpace::community(Player* active_player)
 	cin.ignore(256,'\n');
 
 	int card = draw_card();
-	
+
 	cout << "Your card is:\n";
 
 	switch(card)

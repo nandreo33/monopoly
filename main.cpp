@@ -119,6 +119,10 @@ int main()
 
 		cout << "\n" << active_player->get_name() << "'s turn --------------------------------\n";
 		cout << "You are on " << gameboard[active_player->get_position()]->get_name() << " with $" << active_player->get_balance() << "\n";
+		if (active_player->get_position() == 10 && active_player->get_jail_counter() > 0)
+		{
+			cout << "This is your " << 4-active_player->get_jail_counter() << " turn in jail\n";
+		}
 		cout << "Press enter to roll\n";
 
 		cin.ignore(256,'\n');
@@ -129,18 +133,15 @@ int main()
 		cout << "roll 1: " << die_one << endl;
         cout << "roll 2: " << die_two << endl << endl;
         
-		if (active_player->get_position() == 10)
+		if (active_player->get_position() == 10 && active_player->get_jail_counter() > 0)
 		{
-			if (active_player->get_jail_counter() > 0)
+			if (die_one != die_two)
 			{
-				if (die_one != die_two)
-				{
-					active_player->set_jail_counter(active_player->get_jail_counter()-1);
-				}
-				else 
-				{
-					active_player->move(die_one+die_two,board_size);
-				}
+				active_player->set_jail_counter(active_player->get_jail_counter()-1);
+			}
+			else 
+			{
+				active_player->move(die_one+die_two,board_size);
 			}
 
 		}
@@ -159,7 +160,7 @@ int main()
 			cin >> response;
 			if (response == 1)
 			{
-				
+				active_player->build();
 			}
 			else if (response == 2)
 			{
@@ -167,7 +168,7 @@ int main()
 			}
 			else if (response == 3)
 			{
-				// implement this
+				active_player->mortgage();
 			}
 			else if (response == 4)
 			{

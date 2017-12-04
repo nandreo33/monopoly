@@ -23,11 +23,12 @@ public:
   int get_rent(int die_one, int die_two) const;
   int get_purchase_cost() const;
   int get_num_buildings() const;
+  void set_num_buildings(int i);
   ColorGroup get_color() const;
   bool is_buildable() const;
   string get_name();
   bool is_mortgaged() const;
-  void mortgage();
+  void toggle_mortgage();
   void add_building();
   void set_owner(Player* player);
   Player* get_owner() const;
