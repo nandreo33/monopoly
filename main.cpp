@@ -126,9 +126,30 @@ int main()
 		die_one = roll_d6();
 		die_two = roll_d6();
 
-		active_player->move(die_one+die_two,board_size);
+		cout << "roll 1: " << die_one << endl;
+        cout << "roll 2: " << die_two << endl << endl;
+        
+		if (active_player->get_position() == 10)
+		{
+			if (active_player->get_jail_counter() > 0)
+			{
+				if (die_one != die_two)
+				{
+					active_player->set_jail_counter(active_player->get_jail_counter()-1);
+				}
+				else 
+				{
+					active_player->move(die_one+die_two,board_size);
+				}
+			}
 
-		gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
+		}
+		else
+		{
+			active_player->move(die_one+die_two,board_size);
+
+			gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
+		}
 
 		int response;
 
