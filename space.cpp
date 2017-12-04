@@ -1,9 +1,8 @@
 //============================================================================
 // Name        : monopoly.cpp
-// Author      : Joni Austin
 // Version     :
 // Copyright   : Your copyright notice
-// Description : 
+// Description : Space cpp file determines nonproperty file type and enacts action based on space
 //============================================================================
 
 #include <iostream>
