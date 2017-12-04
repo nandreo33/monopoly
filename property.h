@@ -1,3 +1,9 @@
+/*
+Property header file creates property profile. 
+Sets and stores rent for different properties, and
+establishes the color group, mortgage value, and building value and number 
+*/
+
 #include <string>
 #include <iostream>
 #include "space.h"
