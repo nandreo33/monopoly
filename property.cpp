@@ -56,6 +56,11 @@ bool Property::is_buildable() const
   return buildable;
 };
 
+bool Property::is_mortgaged() const
+{
+  return mortgaged;
+}
+
 string Property::get_name()
 {
   return name;
@@ -99,7 +104,7 @@ int Property::get_rent(int die_one, int die_two) const
 {
   if (get_color().get_color_type() == railroad)
   {
-    return 50*get_owner()->num_owned_railroads();
+    return 50*(get_owner()->num_owned_railroads());
   }
   else if (get_color().get_color_type() == utility)
   {
@@ -118,11 +123,11 @@ int Property::get_rent(int die_one, int die_two) const
   }
   else if (base_rent == 35)
   {
-    return (Rents[100+num_buildings-1]);
+    return (Rents[56+num_buildings-1]);
   }
   else if (base_rent == 50)
   {
-    return (Rents[104+num_buildings-1]);
+    return (Rents[60+num_buildings-1]);
   }
   else
   {
@@ -149,7 +154,7 @@ Player* Property::get_owner() const
 
 void Property::space_action(Player* active_player, int die_one, int die_two)
 {
-  if (get_owner() && get_owner() != active_player)
+  if (get_owner() && get_owner() != active_player && !is_mortgaged())
   {
     cout << "You landed on " << get_name();
     cout << "\n" << get_owner()->get_name() << " owns this property";
@@ -162,6 +167,12 @@ void Property::space_action(Player* active_player, int die_one, int die_two)
     // ###################
     // bankruptcy check ! ! !
     // ###################
+  }
+  else if (get_owner() && get_owner() != active_player && is_mortgaged())
+  {
+    cout << "You landed on " << get_name();
+    cout << "\nIt is mortgaged, so you owe no rent";
+
   }
   else if (get_owner())
   {
@@ -182,6 +193,7 @@ void Property::space_action(Player* active_player, int die_one, int die_two)
       while (true)
       {
         cin >> response;
+        cin.ignore(256,'\n');
         if (response == 1)
         {
           active_player->subtract_money(get_purchase_cost());

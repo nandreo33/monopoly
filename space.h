@@ -13,7 +13,7 @@ class Space
 protected:
 	const string name;
 public:
-	virtual void space_action(Player* active_player,int die_one, int die_two) { cout << "ERROR: called space_action() on space\n";};
+	virtual void space_action(Player* active_player,int die_one, int die_two) { cout << "You landed on " << get_name() << "\n";};
 	virtual string get_name() { return name;};
 	Space(string s) : name(s) {};
 };

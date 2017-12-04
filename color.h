@@ -26,6 +26,7 @@ private:
 public:
 	color_t get_color_type() const {	return color;};
 	int get_building_cost() const {	return building_cost;};
+	int get_num_properties() const {	return num_properties;};
 	ColorGroup(int b_c, int n_p, color_t col) : 
 		building_cost(b_c),	 	//how much does it cost to build on this group?
 		num_properties(n_p),	//how many properties in the group?

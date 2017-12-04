@@ -15,7 +15,7 @@ private:
   int num_buildings;
   bool buildable;
   bool mortgaged;
-  Player* owner
+  Player* owner;
   string name;
   ColorGroup color;
   const int purchase_cost;
@@ -26,6 +26,7 @@ public:
   ColorGroup get_color() const;
   bool is_buildable() const;
   string get_name();
+  bool is_mortgaged() const;
   void mortgage();
   void add_building();
   void set_owner(Player* player);
