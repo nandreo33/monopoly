@@ -1,6 +1,5 @@
 //============================================================================
 // Name        : monopoly.cpp
-// Author      : Joni Austin
 // Version     :
 // Copyright   : Your copyright notice
 // Description : 
