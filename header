@@ -1,9 +1,3 @@
-
-#ifndef monopoly_h
-#define monopoly_h
-#include <iostream>
-using namespace std;
-
 class player{
 private:
     vector<Property*> owned_properties;
@@ -16,8 +10,8 @@ private:
 
 public:
     //these will be used for trading property and capital.
-    void choose_property(Property*, unsigned int, player);
-    void trade_money(int, player, player);
+    void choose_property( unsigned int, player, player);
+    void trade_money(Property, int, player, player);
     //constructor for player
     player(string, int, int, int);
     //assortment of methods explained further in definitions
@@ -35,3 +29,5 @@ public:
     int num_owned_utilities();
     void print_properties();
 };
+
+#endif // player_h
