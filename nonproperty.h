@@ -2,7 +2,9 @@
  * nonproperty.h
  *
  *  Created on: Dec 3, 2017
- *      Author: Joni Austin
+ *
+ * NonProperty header declares injail and NonProperty constructor
+ *
  */
 
 #ifndef NONPROPERTY_H_
