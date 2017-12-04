@@ -1,3 +1,9 @@
+/*
+color.h file defines the differnet property classes/colors. 
+Used to define purchasing cost and building cost of properties,
+and the number of properties per classification.
+*/
+
 #include <string>
 #include <iostream>
 #ifndef COLOR_H
