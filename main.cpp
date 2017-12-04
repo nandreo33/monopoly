@@ -18,6 +18,8 @@ int roll_d6()
 
 int main()
 {
+	srand(time(0));
+
 	Space* gameboard[39];
 	vector<Player*> players;
 
@@ -48,7 +50,7 @@ int main()
 	gameboard[0] = new Space("Go");
     gameboard[1] = new Property(60, 2, true, "Mediterranean Ave", Brown);
     gameboard[2] = new CardSpace("Community Chest");
-    gameboard[3] = new Property(60, 4, true, "Baltic Ave", Brown);
+    gameboard[3] = new Property(60, 4, true, "Baltic Avenue", Brown);
     gameboard[4] = new IncomeTaxSpace();
     gameboard[5] = new Property(200, 0, false, "Reading Railroad", Railroad);
     gameboard[6] = new Property(100, 6, true, "Oriental Avenue", LightBlue);
@@ -93,9 +95,16 @@ int main()
 	//#####################
 
     // filter input
-    int num_players;
+    int num_players = 0;
     cout << "How many players?\n";
-    cin >> num_players;
+    while (num_players < 1)
+    {
+		cin >> num_players;
+		if (num_players < 1)
+		{
+			cout << "num_players must be > 0. try again\n";
+		}
+	}
 
     for (int i = 1; i < num_players+1; i++)
     {
@@ -110,18 +119,44 @@ int main()
 	// intialize things?
 	board_size = 40;
 	active_player = players[0];
-
 	int players_index = 0;
-
-	srand(time(0));
+	int double_roll_count = 0;
 
 	while(true){
+
+		int response = 0;
 
 		cout << "\n" << active_player->get_name() << "'s turn --------------------------------\n";
 		cout << "You are on " << gameboard[active_player->get_position()]->get_name() << " with $" << active_player->get_balance() << "\n";
 		if (active_player->get_position() == 10 && active_player->get_jail_counter() > 0)
 		{
 			cout << "This is your " << 4-active_player->get_jail_counter() << " turn in jail\n";
+			if (active_player->has_get_out_of_jail_free_card())
+			{
+				cout << "Would you like to use your Get Out of Jail Free Card?\n1:Yes\n2:No\n";
+				while (true)
+				{
+					cin >> response;
+					cin.ignore(256,'\n');
+					if (response == 1)
+					{
+						active_player->set_get_out_of_jail_free_card(false);
+						active_player->set_jail_counter(0);
+						break;
+					}
+					else if (response == 2)
+					{
+						break;
+					}
+					else
+					{
+						response = 0;
+						cout << "could not recognize response. try again.\n";
+						cin.clear();
+						cin.ignore(256,'\n');
+					}
+				}
+			}
 		}
 		cout << "Press enter to roll\n";
 
@@ -132,8 +167,8 @@ int main()
 
 		cout << "roll 1: " << die_one << endl;
         cout << "roll 2: " << die_two << endl << endl;
-        
-		if (active_player->get_position() == 10 && active_player->get_jail_counter() > 0)
+
+       	if (active_player->get_position() == 10 && active_player->get_jail_counter() > 0)
 		{
 			if (die_one != die_two)
 			{
@@ -141,18 +176,33 @@ int main()
 			}
 			else 
 			{
+				double_roll_count++;
 				active_player->move(die_one+die_two,board_size);
+				gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
 			}
-
 		}
+		else if (die_one == die_two)
+        {
+        	double_roll_count++;
+        	cout << "You rolled doubles!\n";
+        	if (double_roll_count == 3)
+        	{	
+				cout << "This was your third double in a row. Go directly to jail\n";
+        		active_player->move_to_position(10);
+				active_player->set_jail_counter(3);
+        	} 
+        	else
+        	{        
+        		cout << "\n";		
+				active_player->move(die_one+die_two,board_size);
+				gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
+        	}
+        }
 		else
 		{
 			active_player->move(die_one+die_two,board_size);
-
 			gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
 		}
-
-		int response;
 
 		while (true)
 		{
@@ -192,13 +242,25 @@ int main()
 		cin.clear();
 		cin.ignore(256,'\n');
 
-		// increment players
-
-		players_index++;
-		if (players_index >= players.size())
+		if (active_player->get_balance() <= 0)
 		{
-			players_index = 0;
+			cout << "\n" << active_player->get_name() << " ended the turn while bankrupt and is removed from the game.\n";
+			active_player->reset_owned_properties();
+			players.erase(players.begin() + players_index);
+			players.size();
+			--players_index;
 		}
-		active_player = players[players_index];
+
+		// increment players, unless there were doubles
+		if (die_one != die_two)
+		{
+			double_roll_count = 0;
+			players_index++;
+			if (players_index >= players.size())
+			{
+				players_index = 0;
+			}
+			active_player = players[players_index];
+		}
 	}
 }

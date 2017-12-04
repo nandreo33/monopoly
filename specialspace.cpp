@@ -87,9 +87,7 @@ void CardSpace::community(Player* active_player)
 			break;
 		case 4:	
 			cout << "Get Out of Jail Free";
-			// ###############
-			// how do i implement this
-			// ###############
+			active_player->set_get_out_of_jail_free_card(true);
 			break;
 		case 5:	
 			cout << "Go to Jail--Go directly to jail--Do not pass Go--Do not collect $200";
@@ -162,6 +160,7 @@ void CardSpace::chance(Player* active_player)
 			if (active_player->get_position() > 24)
 			{
 				active_player->add_money(200);
+				cout << "You passed Go and collected $200. Your new balance is " << active_player->get_balance() << '\n';
 			}
 			active_player->move_to_position(24);
 			break;
@@ -170,6 +169,7 @@ void CardSpace::chance(Player* active_player)
 			if (active_player->get_position() > 11)
 			{
 				active_player->add_money(200);
+				cout << "You passed Go and collected $200. Your new balance is " << active_player->get_balance() << '\n';
 			}
 			active_player->move_to_position(11);
 			break;
@@ -186,9 +186,7 @@ void CardSpace::chance(Player* active_player)
 			break;
 		case 4:	
 			cout << "Get Out of Jail Free";
-			// ###############
-			// how do i implement this
-			// ###############
+			active_player->set_get_out_of_jail_free_card(true);
 			break;
 		case 5:	
 			cout << "Go to Jail--Go directly to jail--Do not pass Go--Do not collect $200";
@@ -238,6 +236,7 @@ void CardSpace::chance(Player* active_player)
 			if (active_player->get_position() > 5)
 			{
 				active_player->add_money(200);
+				cout << "You passed Go and collected $200. Your new balance is " << active_player->get_balance() << '\n';
 			}
 			active_player->move_to_position(5);
 			break;

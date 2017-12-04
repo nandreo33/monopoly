@@ -136,7 +136,7 @@ int Player::num_owned_buildings() const
 
 bool Player::is_group_owned(color_t c)
 {
-	int count;
+	int count = 0;
 	int c_group_size;
 	for (int i = 0; i < owned_properties.size(); i++)
 	{
@@ -165,6 +165,24 @@ void Player::set_jail_counter(int i)
 int Player::get_jail_counter()
 {
 	return jail_counter;
+}
+
+void Player::set_get_out_of_jail_free_card(bool b)
+{
+	get_out_of_jail_free_card = b;
+}
+
+bool Player::has_get_out_of_jail_free_card()
+{
+	return get_out_of_jail_free_card;
+}
+
+void Player::reset_owned_properties()
+{
+	for (int i = 0; i < owned_properties.size(); i++)
+	{
+		owned_properties[i]->reset();
+	}
 }
 
 void Player::print_properties()
@@ -255,9 +273,9 @@ void Player::build()
 		if (owned_properties.size())
 		{
 			cout << "\nEnter the number for the property you would like to build on, or 0 to exit\n";
+			cout << "0: exit\n";
 			for (int i = 0; i < owned_properties.size(); i++)
 			{
-				cout << "0: exit\n";
 				if (owned_properties[i]->is_buildable() && is_group_owned(owned_properties[i]->get_color().get_color_type()))
 				{
 					cout << i+1 << ": " << owned_properties[i]->get_name() << "\tnumber of buildings: " << owned_properties[i]->get_num_buildings();
@@ -267,6 +285,7 @@ void Player::build()
 		}
 
 		cin >> response;
+		cin.ignore(256,'\n');
 		if (response == 0)
 		{
 			break;
@@ -276,10 +295,14 @@ void Player::build()
 			int i = response-1;
 			if (owned_properties[i]->is_buildable() 
 				&& is_group_owned(owned_properties[i]->get_color().get_color_type()) 
-				&& !owned_properties[i]->is_mortgaged() 
+				&& !(owned_properties[i]->is_mortgaged()) 
 				&& owned_properties[i]->get_num_buildings() < 5)
 			{
 				owned_properties[i]->set_num_buildings(owned_properties[i]->get_num_buildings()+1);
+			}
+			else
+			{
+				cout << "cannot build on that property\n";
 			}
 		}
 		else

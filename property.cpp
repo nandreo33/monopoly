@@ -83,28 +83,6 @@ void Property::toggle_mortgage()
   }
 }
 
-// ##############################
-// is this right??
-// ##############################
-void Property::add_building()
-{
-  if (is_buildable())
-  {
-    if (num_buildings >= 5)
-    {
-      throw ("add_building() error - property full");
-    }
-    else if (num_buildings < 0)
-    {
-      throw ("add_building() error - property has negative buildings");
-    }
-    else
-    {
-      num_buildings++;
-    }
-  }
-}
-
 int Property::get_rent(int die_one, int die_two) const
 {
   if (get_color().get_color_type() == railroad)
@@ -155,6 +133,13 @@ Player* Property::get_owner() const
   {
     return owner;
   }
+}
+
+void Property::reset()
+{
+  num_buildings = 0;
+  mortgaged = false;
+  owner = 0;
 }
 
 void Property::space_action(Player* active_player, int die_one, int die_two)

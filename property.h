@@ -29,9 +29,9 @@ public:
   string get_name();
   bool is_mortgaged() const;
   void toggle_mortgage();
-  void add_building();
   void set_owner(Player* player);
   Player* get_owner() const;
+  void reset();
   void space_action(Player* active_player, int die_one, int die_two);
   Property(int p_c, int b_r, bool is_b, string s, ColorGroup col);
 };
