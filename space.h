@@ -1,3 +1,8 @@
+/*
+ * space header file protects string name, and creates changeable do_action method
+ *
+ */
+
 #include <string>
 #include <iostream>
 
