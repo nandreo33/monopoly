@@ -5,47 +5,47 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
-#include "player.cpp"
-#include "property.cpp"
-#include "specialspace.cpp"
+#include "player.hpp"
+#include "property.hpp"
+#include "specialspace.hpp"
 
 using namespace std;
 
 int roll_d6()
 {
-	return rand()%6 + 1;	
+    return rand()%6 + 1;
 }
 
 int main()
 {
-	Space* gameboard[39];
-	vector<Player*> players;
-
-	int die_one;
-	int die_two;
-
-	Player* active_player;
-
-	int board_size;
-
-	// create colors
-	// ColorGroup(int building_cost, int num_properties, color_t color)
-
-	ColorGroup Brown(50,2,brown);
-	ColorGroup LightBlue(50,3,light_blue);
-	ColorGroup Purple(100,3,purple);
-	ColorGroup Orange(100,3,orange);
-	ColorGroup Red(150,3,red);
-	ColorGroup Yellow(150,3,yellow);
-	ColorGroup Green(200,3,green);
-	ColorGroup Blue(200,2,blue);
-	ColorGroup Utility(0,2,utility);
-	ColorGroup Railroad(0,4,railroad);
-
-	// create Properties (in board)
-	// Property(int purhcase_cost, int base_rent, bool is_buildable, string name, ColorGroup color);
-
-	gameboard[0] = new Space("Go");
+    Space* gameboard[39];
+    vector<Player*> players;
+    
+    int die_one;
+    int die_two;
+    
+    Player* active_player;
+    
+    int board_size;
+    
+    // create colors
+    // ColorGroup(int building_cost, int num_properties, color_t color)
+    
+    ColorGroup Brown(50,2,brown);
+    ColorGroup LightBlue(50,3,light_blue);
+    ColorGroup Purple(100,3,purple);
+    ColorGroup Orange(100,3,orange);
+    ColorGroup Red(150,3,red);
+    ColorGroup Yellow(150,3,yellow);
+    ColorGroup Green(200,3,green);
+    ColorGroup Blue(200,2,blue);
+    ColorGroup Utility(0,2,utility);
+    ColorGroup Railroad(0,4,railroad);
+    
+    // create Properties (in board)
+    // Property(int purhcase_cost, int base_rent, bool is_buildable, string name, ColorGroup color);
+    
+    gameboard[0] = new Space("Go");
     gameboard[1] = new Property(60, 2, true, "Mediterranean Ave", Brown);
     gameboard[2] = new CardSpace("Community Chest");
     gameboard[3] = new Property(60, 4, true, "Baltic Ave", Brown);
@@ -85,98 +85,81 @@ int main()
     gameboard[37] = new Property(350, 35, true, "Park Place", Blue);
     gameboard[38] = new LuxuryTaxSpace();
     gameboard[39] = new Property(400, 50, true, "Boardwalk", Blue);
-
-	// create players
-	// Player(string name)
-	//#####################
-	// empty name?
-	//#####################
-
+    
+    // create players
+    // Player(string name)
+    //#####################
+    // need input here
+    // empty name?
+    //#####################
+    
     // filter input
     int num_players;
     cout << "How many players?\n";
     cin >> num_players;
-
+    
     for (int i = 1; i < num_players+1; i++)
     {
-    	string name;
-    	cout << "Enter Player " << i << "'s name: ";
-    	cin >> name;
-    	players.push_back(new Player(name));
+        string name;
+        cout << "Enter Player " << i << "'s name: ";
+        cin >> name;
+        players.push_back(new Player(name));
     }
-
+    
     cin.ignore(256,'\n');
-
-	// intialize things?
-	board_size = 40;
-	active_player = players[0];
-
-	int players_index = 0;
-
-	srand(time(0));
-
-	while(true){
-
-		cout << "\n" << active_player->get_name() << "'s turn --------------------------------\n";
-		cout << "You are on " << gameboard[active_player->get_position()]->get_name() << " with $" << active_player->get_balance() << "\n";
-		cout << "Press enter to roll\n";
-
-		cin.ignore(256,'\n');
-
-		die_one = roll_d6();
-		die_two = roll_d6();
-
-		active_player->move(die_one+die_two,board_size);
-
-		gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
-
-		int response;
-
-		while (true)
-		{
-			cout << "\nNext action?:\n1: Build\n2: Trade\n3: Mortgage\n4: Print my status\n5: Pass turn\n";
-			cin >> response;
-			if (response == 1)
-			{
-				
-			}
-			else if (response == 2)
-			{
-				
-			}
-			else if (response == 3)
-			{
-				// implement this
-			}
-			else if (response == 4)
-			{
-				cout << "\n" << active_player->get_name();
-				cout << ":\nYou are on " << gameboard[active_player->get_position()]->get_name() << " with $" << active_player->get_balance() << "\n";
-				cout << "Owned Propeties:\tmortgaged?\tbuildings?\n";
-				active_player->print_properties();
-			}
-			else if (response == 5)
-			{
-				break;
-			}
-			else
-			{
-				cin.clear();
-				cin.ignore(256,'\n');
-				cout << "could not recognize response. try again.";
-			}
-		}
-
-		cin.clear();
-		cin.ignore(256,'\n');
-
-		// increment players
-
-		players_index++;
-		if (players_index >= players.size())
-		{
-			players_index = 0;
-		}
-		active_player = players[players_index];
-	}
+    
+    // intialize things?
+    board_size = 40;
+    active_player = players[0];
+    
+    int players_index = 0;
+    
+    srand(time(0));
+    
+    while(true){
+        
+        cout << "\n" << active_player->get_name() << "'s turn --------------------------------\nYou are on " << gameboard[active_player->get_position()]->get_name() << " with $" << active_player->get_balance() << "\nPress enter to roll\n";
+        
+        cin.ignore(256,'\n');
+        
+        die_one = roll_d6();
+        die_two = roll_d6();
+        
+        cout << "roll 1: " << die_one << endl;
+        cout << "roll 2: " << die_two << endl << endl;
+        
+        if (active_player->get_position() == 10)
+        {
+            if (active_player->get_jail_counter() > 0){
+                
+                if (die_one != die_two){
+                    int u = active_player->get_jail_counter();
+                    active_player->set_jail_counter(--u);
+                }
+            else {
+                active_player->move(die_one+die_two,board_size);
+                }
+            }
+            
+        }
+        else
+        {
+            active_player->move(die_one+die_two,board_size);
+            
+            gameboard[active_player->get_position()]->space_action(active_player,die_one,die_two);
+        }
+        
+        cout << "Press enter to pass turn\n\n";
+        
+        cin.ignore(256,'\n');
+        
+        // increment players
+        
+        players_index++;
+        if (players_index >= players.size())
+        {
+            players_index = 0;
+        }
+        active_player = players[players_index];
+    }
 }
